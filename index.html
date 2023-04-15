@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Mack</title>
+    <link rel="stylesheet" href="../bootstrap-5.2.2-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../fontawesome-free-6.4.0-web/css/all.css">
+</head>
+<style>
+    .card{
+        margin: 10px; 
+    }
+    .card:hover{
+        transform: scale(1.1);
+        z-index: 9999;
+    }
+    .card:hover #playId{
+        display: block !important;
+
+    } 
+    #owner{
+        animation-name: owner;
+        animation-duration: 2s;
+        animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+        animation-direction: alternate-reverse;
+        animation-iteration-count: infinite;
+    }
+    @keyframes owner {
+        0%{transform: scaleY(1.2);}
+        100%{transform: scaleY(.8);}
+    }
+    #body{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        padding: 1rem;
+        justify-content: space-evenly;
+    }
+    @media (max-width: 768px) {
+        .smallDeviceWidth {
+            width: 100% !important;
+        }
+        #body{
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+<body class="position-relative" style="height: 100vh;">
+    <div id="waiting" class="d-none" style="z-index: 999999999999999;">
+        <p class="text-light p-2"><span class="spinner-border text-danger"></span>Please wait. Fetching musics...</p>
+    </div>
+    <div class="smallDeviceWidth w-50 d-block mx-auto position-relative text-warning" style="z-index: 99999999999999;">
+        <marquee behavior="" direction=""><h1 id="owner">PROADE MINI AUDIOMACK</h1></marquee>
+    </div>
+    <div id="body" class="row justify-content-center">
+    </div>
+    
+    
+
+    <script>
+        let isFetchingData = true
+        console.log(window)
+        console.log(document.getElementById("body"));
+        isFetchingData = true
+        if (isFetchingData) {
+            waiting.className = "d-block position-absolute bottom-0 top-0 start-0 end-0 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center"
+        }
+        let endpoint = "https://musica-api.up.railway.app/new"
+        fetch(endpoint)
+        .then((response)=>response.json())
+        .then((convertedResponse)=>{
+            convertedResponse.map((music, index)=>{
+                document.getElementById("body").innerHTML += `
+                <div class="card">
+                    <img src="${music.cover}" alt="" class="card-img">
+                    <div class="card-footer">
+                        <p>Artist: ${music.artist}</p>
+                        <p>Duration: ${music.duration}</p>
+                        <audio id="music${index}" src="${music.audio}" class=""></audio>
+                        <img src="4-Things-You-Should-Know-About-Space-Exploration.jpg" alt="" style="height: 50px; width: 50px;" class="
+                        rounded-circle ms-auto d-none" name="0" onclick="playMusic(event)">
+                        <i id="playId" style="font-size: 20px;" class="fa-sharp fa-regular fa-circle-play ms-auto d-none" onclick="playMusic(event)" name="0"></i>
+                    </div>
+                </div>
+            `
+            })
+            isFetchingData = false
+            if (!isFetchingData) {
+                waiting.className = "d-none"
+            }
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+
+
+        const playMusic =(e)=>{
+            console.log(e)
+            console.log(e.target.offsetParent.lastElementChild.children[2])            
+            if (e.target.name == 0) {
+                e.target.className = "fa-regular fa-circle-pause  ms-auto d-none"
+                e.target.offsetParent.lastElementChild.children[2].play()
+                e.target.name = 1
+            } else{
+                e.target.className = "fa-sharp fa-regular fa-circle-play ms-auto d-none"
+                e.target.offsetParent.lastElementChild.children[2].pause()
+                e.target.name = 0
+            }
+        }
+    </script>
+</body>
+</html>

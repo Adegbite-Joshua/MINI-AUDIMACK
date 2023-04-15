@@ -1,0 +1,6 @@
+INTERFACE - A page
+PAGES - Landing page
+LOGIC - fetchMusic(), playMusic(), pauseMusic()
+DATA STRUCTURE - 
+    let endpoint
+    let musicUrl
